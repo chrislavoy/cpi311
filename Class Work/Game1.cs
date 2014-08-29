@@ -18,6 +18,8 @@ namespace Class_Work
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SpriteFont font;
+        Sprite sprite;
 
         public Game1()
             : base()
@@ -47,7 +49,8 @@ namespace Class_Work
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            font = Content.Load<SpriteFont>("Fonts/Arial");
+            sprite = new Sprite(Content.Load<Texture2D>("Textures/Jellyfish"));
             // TODO: use this.Content to load your game content here
         }
 
@@ -82,9 +85,18 @@ namespace Class_Work
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
+            spriteBatch.Begin();
+            sprite.Draw(spriteBatch);
+            spriteBatch.DrawString(font,
+                    "Hello World!",
+                    new Vector2(50, 50),
+                    Color.Black,
+                    MathHelper.PiOver2,
+                    Vector2.Zero,
+                    Vector2.One,
+                    SpriteEffects.FlipHorizontally,
+                    0);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
