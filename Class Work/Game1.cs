@@ -50,7 +50,7 @@ namespace Class_Work
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Fonts/Arial");
-            sprite = new Sprite(Content.Load<Texture2D>("Textures/Jellyfish"));
+            sprite = new Sprite(Content.Load<Texture2D>("Textures/Square"));
             // TODO: use this.Content to load your game content here
         }
 
