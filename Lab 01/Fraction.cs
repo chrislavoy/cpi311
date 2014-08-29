@@ -122,7 +122,11 @@
         /// <returns>Greatest Common Divisor</returns>
         public static int GCD(int a, int b)
         {
-            // Store the numbers into an array for convenience
+            // GCD is not defined if either number is 0, but we return larger value
+            // Why? So 0/x becomes 0/1 even if we call GCD(d,n) instead of GCD(n,d)
+            if (b == 0)
+                return a;
+            // OK, b is not zero. Store numbers into an array for convenience
             int[] input = { a, b };
             int larger = 0; // Current larger number index
             // Keep finding remainders until the one is zero
@@ -137,7 +141,8 @@
              * => input[1] %= input[larger = (1 + 1) % 2]
              * => input[1] %= input[larger = 0]
              * => input[1] %= input[0] (now, larger = 0)
-             * Also notice that the while loop has a null statement
+             * Also notice that the while loop has a null statement.
+             * See also: Discussion Board
              */
             // OK, remainder is zero, return the other one
             return input[larger];
