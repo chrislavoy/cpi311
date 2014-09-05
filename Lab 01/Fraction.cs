@@ -55,12 +55,13 @@
             int gcd = GCD(numerator, denominator);
             numerator /= gcd;
             denominator /= gcd;
-            // Ensure that Denomainator is positive
+
             if (denominator < 0)
             {
                 denominator *= -1;
                 numerator *= -1;
             }
+            // Ensure that Denomainator is positive
             // NOTE: The denominator check is done after reduction to solve
             // the problem of possible negative value from the GCD method
         }

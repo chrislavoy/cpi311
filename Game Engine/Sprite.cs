@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Class_Work
+namespace CPI311.GameEngine
 {
     public class Sprite
     {
@@ -16,26 +12,32 @@ namespace Class_Work
         public float Rotation { get; set; }
         public Vector2 Origin { get; set; }
         public Vector2 Scale { get; set; }
-        public SpriteEffects Effects { get; set; }
-        public float Layer { get; set; }
+        public SpriteEffects Effect { get; set; }
+        public float Depth { get; set; }
 
         public Sprite(Texture2D texture)
         {
             Texture = texture;
             Position = Vector2.Zero;
-            Source = new Rectangle(0, 0, texture.Width, texture.Height);
+            Source = new Rectangle(0, 0,
+                        Texture.Width,
+                        Texture.Height);
             Color = Color.White;
             Rotation = 0;
-            Origin = Vector2.Zero;
+            Origin = new Vector2(Texture.Width / 2,
+                        Texture.Height / 2);
             Scale = Vector2.One;
-            Effects = SpriteEffects.None;
-            Layer = 0;
+            Effect = SpriteEffects.None;
+            Depth = 0;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Update() { }
+
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Texture, Position, Source, Color,
-                Rotation, Origin, Scale, Effects, Layer);
+                Rotation, Origin, Scale, Effect, Depth);
         }
+
     }
 }

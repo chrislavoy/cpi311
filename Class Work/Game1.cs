@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
+using CPI311.GameEngine;
 #endregion
 
 namespace Class_Work
@@ -20,6 +21,12 @@ namespace Class_Work
         SpriteBatch spriteBatch;
         SpriteFont font;
         Sprite sprite;
+        Random random = new Random();
+
+        Vector2 center = new Vector2(300,300);
+        float radius = 150;
+        float angle = 0;
+        float speed = 5;
 
         public Game1()
             : base()
@@ -37,7 +44,7 @@ namespace Class_Work
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            InputManager.Initialize();
             base.Initialize();
         }
 
@@ -51,42 +58,31 @@ namespace Class_Work
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Fonts/Arial");
             sprite = new Sprite(Content.Load<Texture2D>("Textures/Square"));
-            // TODO: use this.Content to load your game content here
         }
-
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
-        protected override void UnloadContent()
-        {
-            // TODO: Unload any non ContentManager content here
-        }
-
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            // TODO: Add your update logic here
-
+            InputManager.Update();
+            Time.Update(gameTime);
+            angle += speed * Time.ElapsedGameTime;
+            if (InputManager.IsKeyDown(Keys.Up))
+                radius += Time.ElapsedGameTime * 10;
+            if (InputManager.IsKeyDown(Keys.Down))
+                radius -= Time.ElapsedGameTime * 10;
+            sprite.Position = center + new Vector2(
+                (float)((radius + 10* Math.Cos(angle * 5)) * Math.Cos(angle)),
+                (float)((radius + 10* Math.Cos(angle * 5)) * Math.Sin(angle)));
+            sprite.Color = Color.Lerp(Color.Red, Color.Blue, (float)(Math.Cos(angle) + 1) / 2);
             base.Update(gameTime);
         }
-
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
             sprite.Draw(spriteBatch);
+            spriteBatch.DrawString(font,
+                "Smaller method", new Vector2(200, 200), Color.Black);
             spriteBatch.DrawString(font,
                     "Hello World!",
                     new Vector2(50, 50),

@@ -17,8 +17,8 @@ namespace CPI311.Labs
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteFont font;
-        Fraction a = new Fraction(2, 81);
-        Fraction b = new Fraction(8, -27);
+        Fraction a = new Fraction(3, 4);
+        Fraction b = new Fraction(8, 3);
 
         public Lab01()
             : base()
