@@ -25,9 +25,16 @@ namespace CPI311.GameEngine
             CurrentMouseState = Mouse.GetState();
         }
 
+        #region Keyboard Methods
+
         public static bool IsKeyDown(Keys key)
         {
             return CurrentKeyboardState.IsKeyDown(key);
+        }
+
+        public static bool IsKeyUp(Keys key)
+        {
+            return CurrentKeyboardState.IsKeyUp(key);
         }
 
         public static bool IsKeyPressed(Keys key)
@@ -35,5 +42,18 @@ namespace CPI311.GameEngine
             return CurrentKeyboardState.IsKeyDown(key) &&
                     PreviousKeyboardState.IsKeyUp(key);
         }
+
+        public static bool IsKeyReleased(Keys key)
+        {
+            return CurrentKeyboardState.IsKeyUp(key) &&
+                    PreviousKeyboardState.IsKeyDown(key);
+        }
+
+        #endregion
+
+        #region Mouse Methods
+
+        #endregion
+
     }
 }

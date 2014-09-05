@@ -19,13 +19,10 @@ namespace CPI311.GameEngine
         {
             Texture = texture;
             Position = Vector2.Zero;
-            Source = new Rectangle(0, 0,
-                        Texture.Width,
-                        Texture.Height);
+            Source = new Rectangle(0, 0, Texture.Width, Texture.Height);
             Color = Color.White;
             Rotation = 0;
-            Origin = new Vector2(Texture.Width / 2,
-                        Texture.Height / 2);
+            Origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
             Scale = Vector2.One;
             Effect = SpriteEffects.None;
             Depth = 0;
