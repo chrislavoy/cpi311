@@ -21,6 +21,16 @@ namespace Class_Work
         SpriteBatch spriteBatch;
         SpriteFont font;
         Sprite sprite;
+        Model torus;
+        Matrix projection;
+        Matrix view;
+        Matrix world; // for the torus
+        Vector3 torusPosition;
+        Vector3 torusRotation;
+        Vector2 projectionCenter = new Vector2(0f, 0f);
+        Vector2 projectionSize = new Vector2(1, 1);
+        Vector3 torusScale = Vector3.One;
+        bool isOrderFlipped = false;
         Random random = new Random();
 
         Vector2 center = new Vector2(300,300);
@@ -58,6 +68,13 @@ namespace Class_Work
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Fonts/Arial");
             sprite = new Sprite(Content.Load<Texture2D>("Textures/Square"));
+            torus = Content.Load<Model>("Models/Torus");
+            foreach (ModelMesh mesh in torus.Meshes)
+                foreach (BasicEffect effect in mesh.Effects)
+                    effect.EnableDefaultLighting();
+
+            projection = Matrix.CreatePerspectiveFieldOfView(
+                        MathHelper.PiOver2, 1, 0.1f, 100f);
         }
         protected override void Update(GameTime gameTime)
         {
@@ -74,11 +91,64 @@ namespace Class_Work
                 (float)((radius + 10* Math.Cos(angle * 5)) * Math.Cos(angle)),
                 (float)((radius + 10* Math.Cos(angle * 5)) * Math.Sin(angle)));
             sprite.Color = Color.Lerp(Color.Red, Color.Blue, (float)(Math.Cos(angle) + 1) / 2);
+
+            if (InputManager.IsKeyDown(Keys.LeftShift) &&
+                InputManager.IsKeyDown(Keys.Up))
+                torusScale += Vector3.One * 0.1f;
+            if (InputManager.IsKeyDown(Keys.LeftShift) &&
+                InputManager.IsKeyDown(Keys.Down))
+                torusScale -= Vector3.One * 0.1f;
+            if (InputManager.IsKeyDown(Keys.Insert))
+                torusRotation.X += 0.05f;
+            if (InputManager.IsKeyDown(Keys.Delete))
+                torusRotation.X -= 0.05f;
+            if (InputManager.IsKeyDown(Keys.PageUp))
+                torusRotation.Y += 0.05f;
+            if (InputManager.IsKeyDown(Keys.PageDown))
+                torusRotation.Y -= 0.05f;
+            if (InputManager.IsKeyDown(Keys.Home))
+                torusRotation.Z += 0.05f;
+            if (InputManager.IsKeyDown(Keys.End))
+                torusRotation.Z -= 0.05f;
+            if (InputManager.IsKeyDown(Keys.Up))
+                torusPosition.Y += 0.05f;
+            if (InputManager.IsKeyDown(Keys.Down))
+                torusPosition.Y -= 0.05f;
+
+            if (InputManager.IsKeyDown(Keys.LeftShift))
+            {
+                if (InputManager.IsKeyDown(Keys.W))
+                    projectionCenter.Y += 0.05f;
+                if (InputManager.IsKeyDown(Keys.S))
+                    projectionCenter.Y -= 0.05f;
+            }
+            else if (InputManager.IsKeyDown(Keys.LeftControl))
+            {
+                if (InputManager.IsKeyDown(Keys.A))
+                    projectionSize.X += 0.05f;
+                if (InputManager.IsKeyDown(Keys.D))
+                    projectionSize.X -= 0.05f;
+                projectionSize.Y = projectionSize.X * 2;
+            }
+            else
+
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
         {
+            Vector2 topLeft = projectionCenter - projectionSize/2;
+            Vector2 bottomRight = projectionCenter + projectionSize/2;
+            projection = Matrix.CreatePerspectiveOffCenter(
+                topLeft.X, bottomRight.X, topLeft.Y, bottomRight.Y, 0.1f, 100f);
+            view = Matrix.CreateLookAt(Vector3.Backward * 10,
+                Vector3.Zero, Vector3.Up);
+            world = Matrix.CreateScale(torusScale) *
+                Matrix.CreateFromYawPitchRoll(torusRotation.X,torusRotation.Y, torusRotation.Z) *
+                Matrix.CreateTranslation(torusPosition);
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.DepthStencilState = new DepthStencilState();
+            torus.Draw(world, view, projection);
             spriteBatch.Begin();
             sprite.Draw(spriteBatch);
             spriteBatch.DrawString(font,
