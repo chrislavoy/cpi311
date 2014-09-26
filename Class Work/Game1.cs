@@ -22,15 +22,12 @@ namespace Class_Work
         SpriteFont font;
         Sprite sprite;
         Model torus;
-        Matrix projection;
-        Matrix view;
-        Matrix world; // for the torus
-        Vector3 torusPosition;
-        Vector3 torusRotation;
-        Vector2 projectionCenter = new Vector2(0f, 0f);
-        Vector2 projectionSize = new Vector2(1, 1);
-        Vector3 torusScale = Vector3.One;
-        bool isOrderFlipped = false;
+        Effect effect;
+        Transform parentTransform;
+        Transform torusTransform;
+        Transform cameraTransform;
+        Camera camera;
+        int currentTechnique = 0;
         Random random = new Random();
 
         Vector2 center = new Vector2(300,300);
@@ -72,9 +69,16 @@ namespace Class_Work
             foreach (ModelMesh mesh in torus.Meshes)
                 foreach (BasicEffect effect in mesh.Effects)
                     effect.EnableDefaultLighting();
+            this.effect = Content.Load<Effect>("Effects/PerVertex");
+            torusTransform = new Transform();
+            parentTransform = new Transform();
+            parentTransform.Parent = torusTransform;
+            parentTransform.LocalPosition = Vector3.Right * 10;
 
-            projection = Matrix.CreatePerspectiveFieldOfView(
-                        MathHelper.PiOver2, 1, 0.1f, 100f);
+            camera = new Camera();
+            cameraTransform = new Transform();
+            cameraTransform.LocalPosition = Vector3.Backward * 20;
+            camera.Transform = cameraTransform;
         }
         protected override void Update(GameTime gameTime)
         {
@@ -91,64 +95,92 @@ namespace Class_Work
                 (float)((radius + 10* Math.Cos(angle * 5)) * Math.Cos(angle)),
                 (float)((radius + 10* Math.Cos(angle * 5)) * Math.Sin(angle)));
             sprite.Color = Color.Lerp(Color.Red, Color.Blue, (float)(Math.Cos(angle) + 1) / 2);
+            if(InputManager.IsKeyDown(Keys.Z))
+                parentTransform.Rotate(Vector3.Right, 0.05f);
 
-            if (InputManager.IsKeyDown(Keys.LeftShift) &&
-                InputManager.IsKeyDown(Keys.Up))
-                torusScale += Vector3.One * 0.1f;
-            if (InputManager.IsKeyDown(Keys.LeftShift) &&
-                InputManager.IsKeyDown(Keys.Down))
-                torusScale -= Vector3.One * 0.1f;
-            if (InputManager.IsKeyDown(Keys.Insert))
-                torusRotation.X += 0.05f;
-            if (InputManager.IsKeyDown(Keys.Delete))
-                torusRotation.X -= 0.05f;
-            if (InputManager.IsKeyDown(Keys.PageUp))
-                torusRotation.Y += 0.05f;
-            if (InputManager.IsKeyDown(Keys.PageDown))
-                torusRotation.Y -= 0.05f;
-            if (InputManager.IsKeyDown(Keys.Home))
-                torusRotation.Z += 0.05f;
-            if (InputManager.IsKeyDown(Keys.End))
-                torusRotation.Z -= 0.05f;
-            if (InputManager.IsKeyDown(Keys.Up))
-                torusPosition.Y += 0.05f;
-            if (InputManager.IsKeyDown(Keys.Down))
-                torusPosition.Y -= 0.05f;
+            if (InputManager.IsKeyPressed(Keys.Tab))
+                currentTechnique = (currentTechnique + 1) %
+                    effect.Techniques.Count;
 
             if (InputManager.IsKeyDown(Keys.LeftShift))
             {
-                if (InputManager.IsKeyDown(Keys.W))
-                    projectionCenter.Y += 0.05f;
-                if (InputManager.IsKeyDown(Keys.S))
-                    projectionCenter.Y -= 0.05f;
-            }
-            else if (InputManager.IsKeyDown(Keys.LeftControl))
-            {
-                if (InputManager.IsKeyDown(Keys.A))
-                    projectionSize.X += 0.05f;
-                if (InputManager.IsKeyDown(Keys.D))
-                    projectionSize.X -= 0.05f;
-                projectionSize.Y = projectionSize.X * 2;
+                if(InputManager.IsKeyDown(Keys.Up))
+                    torusTransform.LocalScale += Vector3.One * 0.1f;
+                if(InputManager.IsKeyDown(Keys.Down))
+                    torusTransform.LocalScale -= Vector3.One * 0.1f;
             }
             else
+            {
+                if(InputManager.IsKeyDown(Keys.Right))
+                    torusTransform.LocalPosition += torusTransform.Right * 0.1f;
+                if(InputManager.IsKeyDown(Keys.Left))
+                    torusTransform.LocalPosition += torusTransform.Left * 0.1f;
+                if(InputManager.IsKeyDown(Keys.Up))
+                    torusTransform.LocalPosition += torusTransform.Up * 0.1f;
+                if(InputManager.IsKeyDown(Keys.Down))
+                    torusTransform.LocalPosition += torusTransform.Down * 0.1f;
+            }
+
+            if (InputManager.IsKeyDown(Keys.Insert))
+                torusTransform.Rotate(Vector3.Up, 0.05f);
+            if (InputManager.IsKeyDown(Keys.Delete))
+                torusTransform.Rotate(Vector3.Up, -0.05f);
+            if (InputManager.IsKeyDown(Keys.PageUp))
+                torusTransform.Rotate(Vector3.Right, +0.05f);
+            if (InputManager.IsKeyDown(Keys.PageDown))
+                torusTransform.Rotate(Vector3.Right, -0.05f);
+            if (InputManager.IsKeyDown(Keys.Home))
+                torusTransform.Rotate(Vector3.Forward, 0.05f);
+            if (InputManager.IsKeyDown(Keys.End))
+                torusTransform.Rotate(Vector3.Forward, -0.05f);
+
+            if (InputManager.IsKeyDown(Keys.W))
+                cameraTransform.LocalPosition += cameraTransform.Forward * 0.1f;
+            if (InputManager.IsKeyDown(Keys.S))
+                cameraTransform.LocalPosition += cameraTransform.Backward * 0.1f;
+            if (InputManager.IsKeyDown(Keys.A))
+                cameraTransform.Rotate(Vector3.Up, 0.05f);
+            if (InputManager.IsKeyDown(Keys.D))
+                cameraTransform.Rotate(Vector3.Up, -0.05f);
+            if (InputManager.IsKeyDown(Keys.Q))
+                cameraTransform.Rotate(Vector3.Right, 0.05f);
+            if (InputManager.IsKeyDown(Keys.E))
+                cameraTransform.Rotate(Vector3.Right, -0.05f);
 
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
         {
-            Vector2 topLeft = projectionCenter - projectionSize/2;
-            Vector2 bottomRight = projectionCenter + projectionSize/2;
-            projection = Matrix.CreatePerspectiveOffCenter(
-                topLeft.X, bottomRight.X, topLeft.Y, bottomRight.Y, 0.1f, 100f);
-            view = Matrix.CreateLookAt(Vector3.Backward * 10,
-                Vector3.Zero, Vector3.Up);
-            world = Matrix.CreateScale(torusScale) *
-                Matrix.CreateFromYawPitchRoll(torusRotation.X,torusRotation.Y, torusRotation.Z) *
-                Matrix.CreateTranslation(torusPosition);
-
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.DepthStencilState = new DepthStencilState();
-            torus.Draw(world, view, projection);
+            torus.Draw(torusTransform.World, camera.View, camera.Projection);
+            //torus.Draw(parentTransform.World, camera.View, camera.Projection);
+
+            effect.CurrentTechnique = effect.Techniques[currentTechnique];
+            effect.Parameters["World"].SetValue(parentTransform.World);
+            effect.Parameters["View"].SetValue(camera.View);
+            effect.Parameters["Projection"].SetValue(camera.Projection);
+            effect.Parameters["LightPosition"].SetValue(Vector3.Backward*10);
+            effect.Parameters["CameraPosition"].SetValue(cameraTransform.LocalPosition);
+            effect.Parameters["Shininess"].SetValue(20f);
+            foreach(EffectPass pass in effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                foreach(ModelMesh mesh in torus.Meshes)
+                    foreach (ModelMeshPart part in mesh.MeshParts)
+                    {
+                        GraphicsDevice.SetVertexBuffer(part.VertexBuffer);
+                        GraphicsDevice.Indices = part.IndexBuffer;
+                        GraphicsDevice.DrawIndexedPrimitives(
+                            PrimitiveType.TriangleList,
+                            part.VertexOffset,
+                            0,
+                            part.NumVertices,
+                            part.StartIndex,
+                            part.PrimitiveCount);
+                    }
+            }
+
             spriteBatch.Begin();
             sprite.Draw(spriteBatch);
             spriteBatch.DrawString(font,

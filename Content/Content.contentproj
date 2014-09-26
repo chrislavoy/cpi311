@@ -48,7 +48,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Effects\" />
     <Folder Include="Sounds\" />
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +90,13 @@
       <Name>Crystal</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Effects\SimpleShading.fx">
+      <Name>SimpleShading</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>MGEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
