@@ -27,7 +27,6 @@ namespace Class_Work
         Transform torusTransform;
         Transform cameraTransform;
         Camera camera;
-        int currentTechnique = 0;
         Random random = new Random();
 
         Vector2 center = new Vector2(300,300);
@@ -69,7 +68,7 @@ namespace Class_Work
             foreach (ModelMesh mesh in torus.Meshes)
                 foreach (BasicEffect effect in mesh.Effects)
                     effect.EnableDefaultLighting();
-            this.effect = Content.Load<Effect>("Effects/PerVertex");
+            this.effect = Content.Load<Effect>("Effects/SimpleShading");
             torusTransform = new Transform();
             parentTransform = new Transform();
             parentTransform.Parent = torusTransform;
@@ -97,11 +96,6 @@ namespace Class_Work
             sprite.Color = Color.Lerp(Color.Red, Color.Blue, (float)(Math.Cos(angle) + 1) / 2);
             if(InputManager.IsKeyDown(Keys.Z))
                 parentTransform.Rotate(Vector3.Right, 0.05f);
-
-            if (InputManager.IsKeyPressed(Keys.Tab))
-                currentTechnique = (currentTechnique + 1) %
-                    effect.Techniques.Count;
-
             if (InputManager.IsKeyDown(Keys.LeftShift))
             {
                 if(InputManager.IsKeyDown(Keys.Up))
@@ -156,13 +150,16 @@ namespace Class_Work
             torus.Draw(torusTransform.World, camera.View, camera.Projection);
             //torus.Draw(parentTransform.World, camera.View, camera.Projection);
 
-            effect.CurrentTechnique = effect.Techniques[currentTechnique];
+            effect.CurrentTechnique = effect.Techniques[0];
             effect.Parameters["World"].SetValue(parentTransform.World);
             effect.Parameters["View"].SetValue(camera.View);
             effect.Parameters["Projection"].SetValue(camera.Projection);
             effect.Parameters["LightPosition"].SetValue(Vector3.Backward*10);
             effect.Parameters["CameraPosition"].SetValue(cameraTransform.LocalPosition);
             effect.Parameters["Shininess"].SetValue(20f);
+            effect.Parameters["AmbientColor"].SetValue(Vector3.Zero);
+            effect.Parameters["DiffuseColor"].SetValue(new Vector3(0.5f,0,0));
+            effect.Parameters["SpecularColor"].SetValue(new Vector3(0,0,0.5f));
             foreach(EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
