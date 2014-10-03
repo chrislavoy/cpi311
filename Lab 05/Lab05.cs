@@ -21,6 +21,7 @@ namespace CPI311.Labs
         Transform parentTransform;
         Transform childTransform;
         Transform cameraTransform;
+        Texture2D texture;
         Camera camera;
         Effect effect;
 
@@ -56,6 +57,7 @@ namespace CPI311.Labs
             cameraTransform.LocalPosition = Vector3.Backward * 20;
             camera = new Camera();
             camera.Transform = cameraTransform;
+            texture = Content.Load<Texture2D>("Textures/Square");
         }
 
         protected override void Update(GameTime gameTime)
@@ -125,7 +127,7 @@ namespace CPI311.Labs
             //model.Draw(parentTransform.World, view, projection);
             model.Draw(childTransform.World, view, projection);
 
-            effect.CurrentTechnique = effect.Techniques[0];
+            effect.CurrentTechnique = effect.Techniques[1];
             effect.Parameters["World"].SetValue(parentTransform.World);
             effect.Parameters["View"].SetValue(view);
             effect.Parameters["Projection"].SetValue(projection);
@@ -135,6 +137,7 @@ namespace CPI311.Labs
             effect.Parameters["AmbientColor"].SetValue(new Vector3(0.2f, 0.2f, 0.2f));
             effect.Parameters["DiffuseColor"].SetValue(new Vector3(0.5f, 0, 0));
             effect.Parameters["SpecularColor"].SetValue(new Vector3(0, 0, 0.5f));
+            effect.Parameters["DiffuseTexture"].SetValue(texture);
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();

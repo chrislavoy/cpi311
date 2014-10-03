@@ -8,6 +8,14 @@ float Shininess; // scalar value
 float3 AmbientColor;
 float3 DiffuseColor;
 float3 SpecularColor;
+texture DiffuseTexture;
+
+sampler DiffuseSampler = sampler_state
+{
+	Texture = <DiffuseTexture>;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
 
 // We create structs to help us manage the inputs/outputs
 // to vertex and pixel shaders
@@ -15,6 +23,7 @@ struct VertexInput
 {
     float4 Position : POSITION0; // Here, POSITION0 and NORMAL0
 	float3 Normal : NORMAL0; // are called mnemonics
+	float2 UV: TEXCOORD0;
 };
 
 // --- Per Vertex technique - Gouraud
@@ -57,6 +66,7 @@ float4 GouraudPixel(GouraudVertexOutput input) : COLOR0
 struct PhongVertexOutput
 {
 	float4 Position : POSITION0;
+	float2 UV: TEXCOORD0;
 	float4 WorldPosition : TEXCOORD1;
 	float3 WorldNormal : TEXCOORD2;
 };
@@ -71,6 +81,7 @@ PhongVertexOutput PhongVertex(VertexInput input)
 	output.Position = mul(viewPosition, Projection);
 	// as well as the normal in world space
 	output.WorldNormal = mul(input.Normal, World);
+	output.UV = input.UV * 10;
 	return output;
 }
 // The pixel shader performs the lighting
@@ -83,7 +94,7 @@ float4 PhongPixel(PhongVertexOutput input) : COLOR0
 	input.WorldNormal = normalize(input.WorldNormal);
 	float3 reflectDirection = -reflect(lightDirection, input.WorldNormal);
 	// Now, compute the lighint components
-	float diffuse = max(dot(lightDirection, input.WorldNormal), 0);
+	float diffuse = max(dot(lightDirection, input.WorldNormal), 0) * tex2D(DiffuseSampler, input.UV);
 	float specular = pow(max(dot(reflectDirection, viewDirection), 0), Shininess);
 	return float4(AmbientColor + diffuse * DiffuseColor + specular * SpecularColor, 1);
 }
