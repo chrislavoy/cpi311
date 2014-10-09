@@ -35,8 +35,8 @@ namespace CPI311.GameEngine
             {
                 if (Transform == null)
                     return Matrix.Identity;
-                return Matrix.CreateLookAt(Transform.LocalPosition,
-                        Transform.LocalPosition + Transform.Forward,
+                return Matrix.CreateLookAt(Transform.Position,
+                        Transform.Position + Transform.Forward,
                         Transform.Up);
             }
         }
@@ -55,3 +55,4 @@ namespace CPI311.GameEngine
         }
     }
 }
+  
