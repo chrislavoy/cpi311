@@ -7,13 +7,12 @@ namespace CPI311.GameEngine
     /// Should be attached to a Transform
     /// --- Incomplete --- 
     /// </summary>
-    public class Camera
+    public class Camera : Component
     {
         public float FieldOfView { get; set; }
         public float AspectRatio { get; set; }
         public float NearPlane { get; set; }
         public float FarPlane { get; set; }
-        public Transform Transform { get; set; }
 
         public Camera()
         {
