@@ -41,11 +41,11 @@ namespace CPI311.GameEngine
             if (collider is SphereCollider)
             {
                 SphereCollider c = collider as SphereCollider;
+
                 for (int i = 0; i < 2 /* Lab 6: 6 */; i++)
                 {
                     for (int j = 0; j < 2; j++)
                     {
-
                         Vector3 x = vertices[indices[i * 6 + j * 3]]*Size;
                         Vector3 y = vertices[indices[i * 6 + j * 3 + 1]]*Size;
                         Vector3 z = vertices[indices[i * 6 + j * 3 + 2]]*Size;
