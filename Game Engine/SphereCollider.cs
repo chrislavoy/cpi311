@@ -1,8 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CPI311.GameEngine
 {
@@ -10,19 +6,19 @@ namespace CPI311.GameEngine
     {
         public float Radius { get; set; }
 
-        public override bool Collides(Collider collider, out Vector3 normal)
+        public override bool Collides(Collider other, out Vector3 normal)
         {
-            if(collider is SphereCollider)
+            if(other is SphereCollider)
             {
-                SphereCollider c = collider as SphereCollider;
-                if ((Transform.Position - c.Transform.Position).Length() <
-                    Radius + c.Radius)
+                SphereCollider collider = other as SphereCollider;
+                if ((Transform.Position - collider.Transform.Position).Length() <
+                    Radius + collider.Radius)
                 {
-                    normal = Vector3.Normalize(Transform.Position - c.Transform.Position);
+                    normal = Vector3.Normalize(Transform.Position - collider.Transform.Position);
                     return true;
                 }
             }
-            return base.Collides(collider, out normal);
+            return base.Collides(other, out normal);
         }
     }
 }

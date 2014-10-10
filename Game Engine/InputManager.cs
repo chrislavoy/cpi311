@@ -2,13 +2,37 @@
 
 namespace CPI311.GameEngine
 {
+    /// <summary>
+    /// Handles inputs in the game. This is a static class and cannot
+    /// be instantiated.
+    /// </summary>
     public static class InputManager
     {
+        #region Properties
+        /// <summary>
+        /// The keyboard state in the previous Update
+        /// </summary>
         private static KeyboardState PreviousKeyboardState { get; set; }
-        private static KeyboardState CurrentKeyboardState { get; set; }
-        private static MouseState PreviousMouseState { get; set; }
-        private static MouseState CurrentMouseState { get; set; }
 
+        /// <summary>
+        /// The keyboard state in the current Update
+        /// </summary>
+        private static KeyboardState CurrentKeyboardState { get; set; }
+
+        /// <summary>
+        /// The mouse state in the previous Update
+        /// </summary>
+        private static MouseState PreviousMouseState { get; set; }
+
+        /// <summary>
+        /// The mouse state in the current Update
+        /// </summary>
+        private static MouseState CurrentMouseState { get; set; }
+        #endregion
+
+        /// <summary>
+        /// Initializes the input states
+        /// </summary>
         public static void Initialize()
         {
             PreviousKeyboardState = CurrentKeyboardState =
@@ -17,6 +41,10 @@ namespace CPI311.GameEngine
                 Mouse.GetState();
         }
         
+        /// <summary>
+        /// Updates the input states by retrieving the current states
+        /// of keyboard and mouse
+        /// </summary>
         public static void Update()
         {
             PreviousKeyboardState = CurrentKeyboardState;

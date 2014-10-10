@@ -89,10 +89,10 @@ namespace CPI311.Labs
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.DepthStencilState = new DepthStencilState();
 
             model.Draw(objectTransform.World, camera.View, camera.Projection);
             //spriteBatch.Begin();
-
             //spriteBatch.End();
             base.Draw(gameTime);
         }
