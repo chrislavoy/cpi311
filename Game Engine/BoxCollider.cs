@@ -68,7 +68,6 @@ namespace CPI311.GameEngine
                                 return true;
                             }
                         }
-
                     }
                 }
             }
