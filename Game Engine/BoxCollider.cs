@@ -56,9 +56,9 @@ namespace CPI311.GameEngine
                         {
                             Vector3 pointOnPlane = c.Transform.Position -
                                 normal * d;
-                            float area1 = Vector3.Cross(y - x, pointOnPlane - x).Length();
-                            float area2 = Vector3.Cross(z - y, pointOnPlane - y).Length();
-                            float area3 = Vector3.Cross(x - z, pointOnPlane - z).Length();
+                            float area1 = Vector3.Dot(Vector3.Cross(y - x, pointOnPlane - x), normal);
+                            float area2 = Vector3.Dot(Vector3.Cross(z - y, pointOnPlane - y), normal);
+                            float area3 = Vector3.Dot(Vector3.Cross(x - z, pointOnPlane - z), normal);
                             if (!(area1 < 0 || area2 < 0 || area3 < 0))
                             {
                                 outNormal = normal;
