@@ -11,10 +11,9 @@ namespace CPI311.GameEngine
 
         public void Update()
         {
+            Velocity += Acceleration * Time.ElapsedGameTime + Impulse/Mass;
             Transform.LocalPosition += 
                 Velocity * Time.ElapsedGameTime;
-            Velocity += Acceleration * Time.ElapsedGameTime;
-            Velocity += Impulse / Mass;
             Impulse = Vector3.Zero;
         }
     }

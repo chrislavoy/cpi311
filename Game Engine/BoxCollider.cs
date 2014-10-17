@@ -8,8 +8,9 @@ namespace CPI311.GameEngine
         public float Size { get; set; }
 
         private static Vector3[] normals = 
-        { Vector3.Up, Vector3.Down, // top/down
-          // Lab 6: Add four more normals
+        { Vector3.Up, Vector3.Down, // down/up
+          Vector3.Right, Vector3.Left, // left/right
+          Vector3.Forward, Vector3.Backward, // front/back
         };
 
         private static Vector3[] vertices = 
@@ -28,8 +29,11 @@ namespace CPI311.GameEngine
         private static int[] indices = 
         {
             0,1,2,  0,2,3, // Down
-            4,6,5,  4,7,6, // Up
-            // Lab 6: Add four more faces
+            5,4,7,  5,7,6, // Up
+            4,0,3,  4,3,7, // Left
+            1,5,6,  1,6,2, // Right
+            4,5,1,  4,1,0, // Front
+            3,2,6,  3,6,7, // Back
         };
 
         public override bool Collides(Collider other, out Vector3 normal)
@@ -37,9 +41,10 @@ namespace CPI311.GameEngine
             if (other is SphereCollider)
             {
                 SphereCollider collider = other as SphereCollider;
-
+                normal = Vector3.Zero; // no collision
+                bool isColliding = false;
                 // For each face
-                for (int i = 0; i < 2 /* Lab 6: 6 */; i++)
+                for (int i = 0; i < 6; i++)
                 {
                     // For each triangle in the face
                     for (int j = 0; j < 2; j++)
@@ -64,12 +69,16 @@ namespace CPI311.GameEngine
                             // No collision if either one is less than zero
                             if (!(area1 < 0 || area2 < 0 || area3 < 0))
                             {
-                                normal = n;
-                                return true;
+                                normal += n;
+                                j = 1; // skip second triangle, if necessary
+                                if (i % 2 == 0) i += 1; // skip opposite side if necessary
+                                isColliding = true;
                             }
                         }
                     }
                 }
+                normal.Normalize();
+                return isColliding;
             }
             return base.Collides(other, out normal);
         }

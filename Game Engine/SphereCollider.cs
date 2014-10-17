@@ -14,6 +14,7 @@ namespace CPI311.GameEngine
                 if ((Transform.Position - collider.Transform.Position).Length() <
                     Radius + collider.Radius)
                 {
+                    System.Console.WriteLine("Collided");
                     normal = Vector3.Normalize(Transform.Position - collider.Transform.Position);
                     return true;
                 }

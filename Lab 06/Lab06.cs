@@ -17,13 +17,14 @@ namespace CPI311.Labs
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Model model;
+        Random random;
 
         Transform cameraTransform;
         Camera camera;
         
-        Transform objectTransform;
-        Rigidbody rigidbody;
-        SphereCollider sphereCollider;
+        List<Rigidbody> rigidbodies;
+        List<Collider> colliders;
+        List<Transform> transforms;
 
         BoxCollider boxCollider;
 
@@ -38,6 +39,11 @@ namespace CPI311.Labs
         {
             Time.Initialize();
             InputManager.Initialize();
+            random = new Random();
+            transforms = new List<Transform>();
+            rigidbodies = new List<Rigidbody>();
+            colliders = new List<Collider>();
+
             base.Initialize();
         }
 
@@ -54,16 +60,6 @@ namespace CPI311.Labs
             camera = new Camera();
             camera.Transform = cameraTransform;
 
-            objectTransform = new Transform();
-            rigidbody = new Rigidbody();
-            rigidbody.Transform = objectTransform;
-            rigidbody.Mass = 1;
-            //rigidbody.Acceleration = Vector3.Down * 9.81f;
-            rigidbody.Velocity = new Vector3(0, 5, 0);
-            sphereCollider = new SphereCollider();
-            sphereCollider.Radius = 1;
-            sphereCollider.Transform = objectTransform;
-
             boxCollider = new BoxCollider();
             boxCollider.Size = 10;
         }
@@ -76,13 +72,45 @@ namespace CPI311.Labs
                 Exit();
             //if (objectTransform.LocalPosition.Y < 0 && rigidbody.Velocity.Y < 0)
             //    rigidbody.Impulse = -new Vector3(0,rigidbody.Velocity.Y,0) * 2.1f * rigidbody.Mass;
-            rigidbody.Update();
-            Vector3 normal;
-            if(boxCollider.Collides(sphereCollider, out normal))
+
+            if (InputManager.IsKeyPressed(Keys.Space))
             {
-                rigidbody.Velocity += Vector3.Dot(normal, rigidbody.Velocity) * -2 * normal;
+                AddSphere();
             }
 
+            foreach(Rigidbody rigidbody in rigidbodies)
+                rigidbody.Update();
+            
+            // To fix: Assignment 4
+            // 1. Binary spheres (fixed (see (A))
+            // 2. Enery in the system increases (how to fix?)
+            Vector3 normal;
+            for (int i = 0; i < transforms.Count; i++)
+            {
+                if (boxCollider.Collides(colliders[i], out normal))
+                {
+                    // Lab 7: include mass in equation
+                    rigidbodies[i].Impulse += Vector3.Dot(normal, rigidbodies[i].Velocity) * -2 * normal;
+                }
+                for (int j = i + 1; j < transforms.Count; j++)
+                {
+                    if (colliders[i].Collides(colliders[j], out normal))
+                    {
+                        // Lab 7: include mass in equation
+
+                        // do resolution ONLY if they are colliding into one another
+                        // if normal is from i to j
+                        //dot(normal, vi) > 0 & dot(normal, vj) < 0) (A)
+                        if (Vector3.Dot(normal, rigidbodies[i].Velocity) > 0 &&
+                            Vector3.Dot(normal, rigidbodies[j].Velocity) < 0)
+                            return;
+                        Vector3 velocityNormal = Vector3.Dot(normal, rigidbodies[i].Velocity - rigidbodies[j].Velocity)
+                                        * -2 * normal * rigidbodies[i].Mass * rigidbodies[j].Mass;
+                        rigidbodies[i].Impulse += velocityNormal / 2;
+                        rigidbodies[j].Impulse += -velocityNormal / 2;
+                    }
+                }
+            }
             base.Update(gameTime);
         }
 
@@ -91,10 +119,29 @@ namespace CPI311.Labs
             GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.DepthStencilState = new DepthStencilState();
 
-            model.Draw(objectTransform.World, camera.View, camera.Projection);
+            foreach(Transform transform in transforms)
+            model.Draw(transform.World, camera.View, camera.Projection);
             //spriteBatch.Begin();
             //spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        private void AddSphere()
+        {
+            Transform transform = new Transform();
+            Rigidbody rigidbody = new Rigidbody();
+            rigidbody.Transform = transform;
+            rigidbody.Mass = 1; // Lab 7: random mass
+            //rigidbody.Acceleration = Vector3.Down * 9.81f;
+            //rigidbody.Velocity = new Vector3((float)random.NextDouble() * 5, (float)random.NextDouble() * 5, (float)random.NextDouble() * 5);
+            rigidbody.Velocity = new Vector3((float)random.NextDouble() * 10 - 5, (float)random.NextDouble() * 10-5, 0);
+            SphereCollider sphereCollider = new SphereCollider();
+            sphereCollider.Radius = 2.5f;
+            sphereCollider.Transform = transform;
+
+            transforms.Add(transform);
+            colliders.Add(sphereCollider);
+            rigidbodies.Add(rigidbody);
         }
     }
 }

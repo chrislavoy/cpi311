@@ -36,14 +36,26 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 03", "Lab 03\Lab 03.csp
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 04", "Lab 04\Lab 04.csproj", "{03B309CF-CAC1-43FB-9988-4B609B8411FE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{588126B1-1145-4DF8-8585-310A51CB3057} = {588126B1-1145-4DF8-8585-310A51CB3057}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 05", "Lab 05\Lab 05.csproj", "{73BD9E0F-2A18-4FAA-B0E9-21B0726B99F3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{588126B1-1145-4DF8-8585-310A51CB3057} = {588126B1-1145-4DF8-8585-310A51CB3057}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 06", "Lab 06\Lab 06.csproj", "{931D6402-E1CC-453C-96F0-1A945955A606}"
+	ProjectSection(ProjectDependencies) = postProject
+		{588126B1-1145-4DF8-8585-310A51CB3057} = {588126B1-1145-4DF8-8585-310A51CB3057}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assignment 2", "Assignment 2\Assignment 2.csproj", "{144B1C11-FD11-4876-8D90-6B3A4F07A505}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 07", "Lab 07\Lab 07.csproj", "{30290CEA-04C5-4BD1-B6DF-698202DE1D6F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{588126B1-1145-4DF8-8585-310A51CB3057} = {588126B1-1145-4DF8-8585-310A51CB3057}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 08", "Lab 08\Lab 08.csproj", "{E3382F28-5FA9-4168-AF15-68C5E5AE864A}"
 EndProject
