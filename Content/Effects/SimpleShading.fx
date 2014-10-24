@@ -10,6 +10,7 @@ float3 DiffuseColor;
 float3 SpecularColor;
 texture DiffuseTexture;
 
+
 sampler DiffuseSampler = sampler_state
 {
 	Texture = <DiffuseTexture>;

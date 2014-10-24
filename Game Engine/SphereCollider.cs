@@ -11,8 +11,8 @@ namespace CPI311.GameEngine
             if(other is SphereCollider)
             {
                 SphereCollider collider = other as SphereCollider;
-                if ((Transform.Position - collider.Transform.Position).Length() <
-                    Radius + collider.Radius)
+                if ((Transform.Position - collider.Transform.Position).LengthSquared() <
+                    System.Math.Pow(Radius + collider.Radius, 2))
                 {
                     System.Console.WriteLine("Collided");
                     normal = Vector3.Normalize(Transform.Position - collider.Transform.Position);
