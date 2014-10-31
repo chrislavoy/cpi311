@@ -14,6 +14,8 @@ namespace CPI311.GameEngine
         public Vector2 Scale { get; set; }
         public SpriteEffects Effect { get; set; }
         public float Depth { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
 
         public Sprite(Texture2D texture)
         {
@@ -22,7 +24,9 @@ namespace CPI311.GameEngine
             Source = new Rectangle(0, 0, Texture.Width, Texture.Height);
             Color = Color.White;
             Rotation = 0;
-            Origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
+            Width = Texture.Width;
+            Height = Texture.Height;
+            Origin = new Vector2(Width / 2, Height / 2);
             Scale = Vector2.One;
             Effect = SpriteEffects.None;
             Depth = 0;

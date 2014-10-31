@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using CPI311.GameEngine;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
+using System.IO;
 #endregion
 
 namespace CPI311.Labs
@@ -55,13 +56,14 @@ namespace CPI311.Labs
             effect = Content.Load<Effect>("Effects/SimpleShading");
             texture = Content.Load<Texture2D>("Textures/Square");
             font = Content.Load<SpriteFont>("Fonts/Arial");
-            gunSound = Content.Load<SoundEffect>("Sounds/Gun");
-            cube = Content.Load<Model>("Models/Box");
+            //gunSound = Content.Load<SoundEffect>("Sounds/Gun");
+            gunSound = SoundEffect.FromStream(new FileStream("../Content/Sounds/Gun.wav",FileMode.Open));
+            cube = Content.Load<Model>("Models/Sphere");
             (cube.Meshes[0].Effects[0] as BasicEffect).EnableDefaultLighting();
 
             Transform transform = new Transform();
-            BoxCollider collider = new BoxCollider();
-            collider.Size = 1f;
+            SphereCollider collider = new SphereCollider();
+            collider.Radius = 1f;
             collider.Transform = transform;
             transforms.Add(transform);
             colliders.Add(collider);
