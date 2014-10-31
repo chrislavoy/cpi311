@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace CPI311.GameEngine
 {
@@ -80,7 +81,10 @@ namespace CPI311.GameEngine
         #endregion
 
         #region Mouse Methods
-
+        public static Vector2 GetMousePosition()
+        {
+            return new Vector2(CurrentMouseState.X, CurrentMouseState.Y);
+        }
         #endregion
 
     }

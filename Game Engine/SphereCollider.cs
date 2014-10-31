@@ -21,5 +21,11 @@ namespace CPI311.GameEngine
             }
             return base.Collides(other, out normal);
         }
+
+        public override float? Intersects(Ray ray)
+        {
+            BoundingSphere sphere = new BoundingSphere(Vector3.Zero, Radius);
+            return sphere.Intersects(ray);
+        }
     }
 }

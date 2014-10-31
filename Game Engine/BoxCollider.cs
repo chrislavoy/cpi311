@@ -82,5 +82,11 @@ namespace CPI311.GameEngine
             }
             return base.Collides(other, out normal);
         }
+
+        public override float? Intersects(Ray ray)
+        {
+            BoundingBox box = new BoundingBox(new Vector3(-1,0,-1)*0.5f, new Vector3(1,2,1)*0.5f);
+            return box.Intersects(ray);
+        }
     }
 }
