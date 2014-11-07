@@ -10,8 +10,7 @@ namespace CPI311.GameEngine
     {
         public Model Model { get; set; }
 
-        public ModelRenderer(GraphicsDevice graphics, Model model)
-            : base(graphics)
+        public ModelRenderer(Model model)
         {
             Model = model;
         }
@@ -24,12 +23,13 @@ namespace CPI311.GameEngine
                 Model.Draw(Transform.World, Camera.Current.View, Camera.Current.Projection);
             else
             {
+                Material.Apply(Transform.World);
                 foreach (ModelMesh mesh in Model.Meshes)
                     foreach (ModelMeshPart part in mesh.MeshParts)
                     {
-                        GraphicsDevice.SetVertexBuffer(part.VertexBuffer);
-                        GraphicsDevice.Indices = part.IndexBuffer;
-                        GraphicsDevice.DrawIndexedPrimitives(
+                        ScreenManager.GraphicsDevice.SetVertexBuffer(part.VertexBuffer);
+                        ScreenManager.GraphicsDevice.Indices = part.IndexBuffer;
+                        ScreenManager.GraphicsDevice.DrawIndexedPrimitives(
                             PrimitiveType.TriangleList, part.VertexOffset, 0,
                             part.NumVertices, part.StartIndex, part.PrimitiveCount);
                     }

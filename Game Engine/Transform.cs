@@ -90,7 +90,18 @@ namespace CPI311.GameEngine
         public Vector3 Position
         {
             get { return world.Translation; }
-            set { LocalPosition = value - Parent.Position; }
+            set {
+                if (Parent == null)
+                    LocalPosition = value;
+                else
+                {
+                    Matrix total = World;
+                    total.Translation = value;
+                    LocalPosition = (Matrix.CreateScale(1 / LocalScale.X, 1 / LocalScale.Y, 1 / LocalScale.Z)
+                    * Matrix.CreateFromQuaternion(Quaternion.Inverse(LocalRotation)) *
+                    total * Matrix.Invert(Parent.World)).Translation;
+                }
+            }
         }
 
         /// <summary>

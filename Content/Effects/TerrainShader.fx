@@ -53,6 +53,7 @@ float4 PhongPixel(PhongVertexOutput input) : COLOR0
 	float3 viewDirection = normalize(CameraPosition - input.WorldPosition.xyz);
 	// Need to normalize my incoming normal, length could be less than 1
 	float3 normal = normalize(mul(tex2D(NormalMapSampler, input.UV).xyz, World));
+	normal.z = normal.z * -1;
 	float3 reflectDirection = -reflect(lightDirection, normal);
 	// Now, compute the lighint components
 	float diffuse = max(dot(lightDirection, normal), 0);

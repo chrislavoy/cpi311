@@ -69,13 +69,14 @@ namespace CPI311.Labs
             transforms.Add(transform);
             colliders.Add(collider);
 
-            ScreenManager.Setup(false, 800, 600);
+            ScreenManager.Setup(true, 1920, 1080);
 
             camera = new Camera();
             camera.Transform = new Transform();
             camera.Transform.LocalPosition = Vector3.Backward * 5;
             camera.Position = new Vector2(0f, 0f);
             camera.Size = new Vector2(0.5f, 1f);
+            camera.AspectRatio = camera.Viewport.AspectRatio;
 
             topDownCamera = new Camera();
             topDownCamera.Transform = new Transform();
@@ -83,11 +84,10 @@ namespace CPI311.Labs
             topDownCamera.Transform.Rotate(Vector3.Right, -MathHelper.PiOver2);
             topDownCamera.Position = new Vector2(0.5f, 0f);
             topDownCamera.Size = new Vector2(0.5f, 01f);
+            topDownCamera.AspectRatio = topDownCamera.Viewport.AspectRatio;
 
             cameras.Add(topDownCamera);
-            cameras.Add(camera);
-            
-            
+            cameras.Add(camera);            
         }
 
         protected override void Update(GameTime gameTime)

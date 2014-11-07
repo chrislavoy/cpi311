@@ -1,9 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CPI311.GameEngine
 {
@@ -27,7 +23,7 @@ namespace CPI311.GameEngine
 
         public static int Width
         {
-            get { return graphics.PreferredBackBufferWidth; }
+            get { return GraphicsDevice.PresentationParameters.BackBufferWidth; }
             set
             {
                 graphics.PreferredBackBufferWidth = value;
@@ -37,7 +33,7 @@ namespace CPI311.GameEngine
 
         public static int Height
         {
-            get { return graphics.PreferredBackBufferHeight; }
+            get { return GraphicsDevice.PresentationParameters.BackBufferHeight; }
             set
             {
                 graphics.PreferredBackBufferHeight = value;

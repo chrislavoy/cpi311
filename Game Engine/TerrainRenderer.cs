@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CPI311.GameEngine
 {
@@ -19,21 +16,25 @@ namespace CPI311.GameEngine
         public TerrainRenderer(Texture2D heightMap, 
             Vector2 size, Vector2 resolution)
         {
-            this.size = resolution;
+            this.size = size;
             HeightMap = heightMap;
             CreateHeights();
             int rows = (int)(resolution.Y) + 1;
             int cols = (int)(resolution.X) + 1;
+
+            Vector3 offset = new Vector3(-size.X / 2, 0, -size.Y / 2);
+            float stepX = size.X / resolution.X;
+            float stepZ = size.Y / resolution.Y;
 
             Vertices = new VertexPositionTexture[rows * cols];
             for(int r = 0; r < rows; r++)
                 for(int c = 0; c < cols; c++)
                 {
                     Vertices[r * cols + c] = new VertexPositionTexture
-                    (new Vector3(c, 
-                        GetHeight(new Vector2(r/(float)rows, c/(float)cols)), 
-                        r), 
-                    Vector2.Zero);
+                    (offset + new Vector3(c * stepX,
+                        GetHeight(new Vector2(c / resolution.X, r / resolution.Y)),
+                        r * stepZ),
+                    new Vector2(c / resolution.X, r / resolution.Y));
                 }
 
             Indices = new int[(rows - 1) * (cols - 1) * 6];
@@ -62,17 +63,23 @@ namespace CPI311.GameEngine
 
         public float GetHeight(Vector2 tex)
         {
-            tex *= //Vector2.Clamp(tex Vector2.Zero, Vector2.One) *
-                new Vector2(HeightMap.Width, HeightMap.Height);
-            return Heights[(int)tex.Y * HeightMap.Width + (int)tex.X];
+            tex = Vector2.Clamp(tex, Vector2.Zero, Vector2.One) *
+                new Vector2(HeightMap.Width-1, HeightMap.Height-1);
+            int x = (int)tex.X; float u = tex.X - x;
+            int y = (int)tex.Y; float v = tex.Y - y;
+            return Heights[y * HeightMap.Width + x] * (1 - u) * (1 - v) +
+                Heights[y * HeightMap.Width + Math.Min(x + 1, HeightMap.Width - 1)] * u * (1 - v) +
+                Heights[Math.Min(y + 1, HeightMap.Height - 1) * HeightMap.Width + x] * (1 - u) * v +
+                Heights[Math.Min(y + 1, HeightMap.Height - 1) * HeightMap.Width + Math.Min(x + 1, HeightMap.Width - 1)] * u * v;
         }
 
         public float GetAltitude(Vector3 position)
         {
-            if (position.X > 0 && position.X < size.Y &&
-                position.Z > 0 && position.Z < size.X)
-                return GetHeight(new Vector2(position.X / size.X, position.Z / size.Y)) *
-                    Transform.LocalScale.Y ;
+            position = Vector3.Transform(position, Matrix.Invert(Transform.World));
+            if (position.X > -size.X / 2 && position.X < size.X / 2 &&
+                position.Z > -size.Y / 2 && position.Z < size.Y / 2)
+                return GetHeight(new Vector2((position.X + size.X / 2) / size.X, (position.Z + size.Y / 2) / size.Y)) *
+                    Transform.LocalScale.Y;
             return -1;
 
         }
