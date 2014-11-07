@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace CPI311.GameEngine
 {
@@ -9,18 +10,35 @@ namespace CPI311.GameEngine
     /// </summary>
     public class Camera : Component
     {
+        public static Camera Current { get; set; }
+
         public float FieldOfView { get; set; }
         public float AspectRatio { get; set; }
         public float NearPlane { get; set; }
         public float FarPlane { get; set; }
 
+        public Vector2 Position { get; set; }
+        public Vector2 Size { get; set; }
+        public Viewport Viewport
+        {
+            get
+            {
+                return new Viewport((int)(ScreenManager.Width * Position.X),
+                            (int)(ScreenManager.Height * Position.Y),
+                            (int)(ScreenManager.Width * Size.X),
+                            (int)(ScreenManager.Height * Size.Y));
+            }
+        }
+
         public Camera()
         {
             FieldOfView = MathHelper.PiOver2;
-            AspectRatio = 1;
+            AspectRatio = ScreenManager.DefaultViewport.AspectRatio;
             NearPlane = 0.1f;
             FarPlane = 100f;
             Transform = null;
+            Position = Vector2.Zero;
+            Size = Vector2.One;
         }
 
         /// <summary>
@@ -51,6 +69,15 @@ namespace CPI311.GameEngine
                 return Matrix.CreatePerspectiveFieldOfView(
                     FieldOfView, AspectRatio, NearPlane, FarPlane);
             }
+        }
+
+        public Ray ScreenPointToWorldRay(Vector2 position)
+        {
+            Vector3 start = Viewport.Unproject(
+                new Vector3(position, 0), Projection, View, Matrix.Identity);
+            Vector3 end = Viewport.Unproject(
+                new Vector3(position, 1), Projection, View, Matrix.Identity);
+            return new Ray(start, end - start);
         }
     }
 }

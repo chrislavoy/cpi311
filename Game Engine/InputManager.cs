@@ -85,6 +85,21 @@ namespace CPI311.GameEngine
         {
             return new Vector2(CurrentMouseState.X, CurrentMouseState.Y);
         }
+
+        public static bool IsMousePressed(int mouseButton)
+        {
+            switch (mouseButton)
+            {
+                case 0: return PreviousMouseState.LeftButton == ButtonState.Released &&
+                    CurrentMouseState.LeftButton == ButtonState.Pressed;
+                case 1: return PreviousMouseState.RightButton == ButtonState.Released &&
+                CurrentMouseState.RightButton == ButtonState.Pressed;
+                case 2: return PreviousMouseState.MiddleButton == ButtonState.Released &&
+                CurrentMouseState.MiddleButton == ButtonState.Pressed;
+                default:
+                    return false;
+            }
+        }
         #endregion
 
     }

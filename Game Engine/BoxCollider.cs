@@ -85,6 +85,9 @@ namespace CPI311.GameEngine
 
         public override float? Intersects(Ray ray)
         {
+            Matrix worldInverted = Matrix.Invert(Transform.World);
+            ray.Position = Vector3.Transform(ray.Position, worldInverted);
+            ray.Direction = Vector3.TransformNormal(ray.Direction, worldInverted);
             BoundingBox box = new BoundingBox(Vector3.One * -Size, Vector3.One * Size);
             return box.Intersects(ray);
         }

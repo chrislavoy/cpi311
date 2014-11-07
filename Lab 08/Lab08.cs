@@ -27,9 +27,8 @@ namespace CPI311.Labs
         Model cube;
         List<Transform> transforms;
         List<Collider> colliders;
-        Camera camera;
-
-        Vector3 mousePositionWorld;
+        Camera camera, topDownCamera;
+        List<Camera> cameras;
 
         public Lab08()
             : base()
@@ -39,6 +38,7 @@ namespace CPI311.Labs
 
             transforms = new List<Transform>();
             colliders = new List<Collider>();
+            cameras = new List<Camera>();
             
             IsMouseVisible = true;
         }
@@ -47,6 +47,7 @@ namespace CPI311.Labs
         {
             Time.Initialize();
             InputManager.Initialize();
+            ScreenManager.Initialize(graphics);
             base.Initialize();
         }
 
@@ -57,7 +58,7 @@ namespace CPI311.Labs
             texture = Content.Load<Texture2D>("Textures/Square");
             font = Content.Load<SpriteFont>("Fonts/Arial");
             //gunSound = Content.Load<SoundEffect>("Sounds/Gun");
-            gunSound = SoundEffect.FromStream(new FileStream("../Content/Sounds/Gun.wav",FileMode.Open));
+            gunSound = SoundEffect.FromStream(new FileStream("Content/Sounds/Gun.wav",FileMode.Open));
             cube = Content.Load<Model>("Models/Sphere");
             (cube.Meshes[0].Effects[0] as BasicEffect).EnableDefaultLighting();
 
@@ -68,9 +69,25 @@ namespace CPI311.Labs
             transforms.Add(transform);
             colliders.Add(collider);
 
+            ScreenManager.Setup(false, 800, 600);
+
             camera = new Camera();
             camera.Transform = new Transform();
             camera.Transform.LocalPosition = Vector3.Backward * 5;
+            camera.Position = new Vector2(0f, 0f);
+            camera.Size = new Vector2(0.5f, 1f);
+
+            topDownCamera = new Camera();
+            topDownCamera.Transform = new Transform();
+            topDownCamera.Transform.LocalPosition = Vector3.Up * 10;
+            topDownCamera.Transform.Rotate(Vector3.Right, -MathHelper.PiOver2);
+            topDownCamera.Position = new Vector2(0.5f, 0f);
+            topDownCamera.Size = new Vector2(0.5f, 01f);
+
+            cameras.Add(topDownCamera);
+            cameras.Add(camera);
+            
+            
         }
 
         protected override void Update(GameTime gameTime)
@@ -79,38 +96,25 @@ namespace CPI311.Labs
             InputManager.Update();
             if (InputManager.IsKeyDown(Keys.Escape))
                 Exit();
-            Vector3 mousePositionScreen = new Vector3(InputManager.GetMousePosition(),0);
-            mousePositionWorld = GraphicsDevice.Viewport.Unproject(
-                mousePositionScreen, // mouse position
-                camera.Projection, // Projection
-                camera.View, // View
-                Matrix.Identity); // don't give world matrix
+
+            Ray ray = camera.ScreenPointToWorldRay(InputManager.GetMousePosition());
             foreach(Collider collider in colliders)
             {
-                //collider.Transform.Rotate(Vector3.Up, Time.ElapsedGameTime);
+                collider.Transform.Rotate(Vector3.Up, Time.ElapsedGameTime);
                 collider.Transform.Rotate(Vector3.Right, Time.ElapsedGameTime);
-                //collider.Transform.Rotate(Vector3.Forward, Time.ElapsedGameTime);
+                collider.Transform.Rotate(Vector3.Forward, Time.ElapsedGameTime);
 
-                Vector3 cameraPositionObject =
-                    Vector3.Transform(camera.Transform.Position,
-                    Matrix.Invert(collider.Transform.World));
-                Vector3 mousePositionObject =
-                    Vector3.Transform(mousePositionWorld,
-                    Matrix.Invert(collider.Transform.World));
-                Ray ray = new Ray(cameraPositionObject, 
-                    Vector3.Normalize(mousePositionObject-cameraPositionObject));
                 if(collider.Intersects(ray) != null)
                 {
                     effect.Parameters["DiffuseColor"].SetValue(
                         Color.Red.ToVector3());
                     (cube.Meshes[0].Effects[0] as BasicEffect).DiffuseColor = Color.Blue.ToVector3();
                     SoundEffectInstance soundInstance = gunSound.CreateInstance();
-                    if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    if (InputManager.IsMousePressed(0))
                     {
                         soundInstance.IsLooped = false;
                         soundInstance.Play();
                     }
-                        
                 }
                 else
                 {
@@ -125,43 +129,46 @@ namespace CPI311.Labs
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            GraphicsDevice.DepthStencilState = new DepthStencilState();
-
-            Matrix view = camera.View;
-            Matrix projection = camera.Projection;
-            //cube.Draw(transforms[0].World, view, projection);
-            
-            effect.CurrentTechnique = effect.Techniques[1];
-            effect.Parameters["View"].SetValue(view);
-            effect.Parameters["Projection"].SetValue(projection);
-            effect.Parameters["LightPosition"].SetValue(Vector3.Backward * 10 + Vector3.Right * 5);
-            effect.Parameters["CameraPosition"].SetValue(camera.Transform.Position);
-            effect.Parameters["Shininess"].SetValue(20f);
-            effect.Parameters["AmbientColor"].SetValue(new Vector3(0.2f, 0.2f, 0.2f));
-            effect.Parameters["SpecularColor"].SetValue(new Vector3(0, 0, 0.5f));
-            effect.Parameters["DiffuseTexture"].SetValue(texture);
-            foreach (Transform transform in transforms)
+            foreach (Camera camera in cameras)
             {
-                effect.Parameters["World"].SetValue(transform.World);
-                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                GraphicsDevice.DepthStencilState = new DepthStencilState();
+                GraphicsDevice.Viewport = camera.Viewport;
+                Matrix view = camera.View;
+                Matrix projection = camera.Projection;
+                //cube.Draw(transforms[0].World, view, projection);
+
+                effect.CurrentTechnique = effect.Techniques[1];
+                effect.Parameters["View"].SetValue(view);
+                effect.Parameters["Projection"].SetValue(projection);
+                effect.Parameters["LightPosition"].SetValue(Vector3.Backward * 10 + Vector3.Right * 5);
+                effect.Parameters["CameraPosition"].SetValue(camera.Transform.Position);
+                effect.Parameters["Shininess"].SetValue(20f);
+                effect.Parameters["AmbientColor"].SetValue(new Vector3(0.2f, 0.2f, 0.2f));
+                effect.Parameters["SpecularColor"].SetValue(new Vector3(0, 0, 0.5f));
+                effect.Parameters["DiffuseTexture"].SetValue(texture);
+                foreach (Transform transform in transforms)
                 {
-                    pass.Apply();
-                    foreach (ModelMesh mesh in cube.Meshes)
-                        foreach (ModelMeshPart part in mesh.MeshParts)
-                        {
-                            GraphicsDevice.SetVertexBuffer(part.VertexBuffer);
-                            GraphicsDevice.Indices = part.IndexBuffer;
-                            GraphicsDevice.DrawIndexedPrimitives(
-                                PrimitiveType.TriangleList, part.VertexOffset, 0,
-                                part.NumVertices, part.StartIndex, part.PrimitiveCount);
-                        }
+                    effect.Parameters["World"].SetValue(transform.World);
+                    foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                    {
+                        pass.Apply();
+                        foreach (ModelMesh mesh in cube.Meshes)
+                            foreach (ModelMeshPart part in mesh.MeshParts)
+                            {
+                                GraphicsDevice.SetVertexBuffer(part.VertexBuffer);
+                                GraphicsDevice.Indices = part.IndexBuffer;
+                                GraphicsDevice.DrawIndexedPrimitives(
+                                    PrimitiveType.TriangleList, part.VertexOffset, 0,
+                                    part.NumVertices, part.StartIndex, part.PrimitiveCount);
+                            }
+                    }
                 }
+
+                spriteBatch.Begin();
+                spriteBatch.DrawString(font, "Screen Width = " + ScreenManager.Width, Vector2.UnitY * 20, Color.Black);
+                spriteBatch.DrawString(font, "Screen Height = " + ScreenManager.Height, Vector2.UnitY * 40, Color.Black);
+                spriteBatch.End();
             }
-           
-            spriteBatch.Begin();
-            spriteBatch.DrawString(font, mousePositionWorld.ToString(),
-                                        Vector2.Zero,Color.Black);
-            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
