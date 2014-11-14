@@ -63,6 +63,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 08", "Lab 08\Lab 08.csp
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 09", "Lab 09\Lab 09.csproj", "{89C024B4-5CDE-45A9-AD0B-84B0FF391130}"
+	ProjectSection(ProjectDependencies) = postProject
+		{588126B1-1145-4DF8-8585-310A51CB3057} = {588126B1-1145-4DF8-8585-310A51CB3057}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab 10", "Lab 10\Lab 10.csproj", "{EBA478AB-D55E-4C06-855F-46F377E342E3}"
 	ProjectSection(ProjectDependencies) = postProject
