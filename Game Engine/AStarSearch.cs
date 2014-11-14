@@ -73,9 +73,10 @@ namespace CPI311.GameEngine
                 else
                     return;
             }
-            if (!openList.ContainsKey(node.Cost+node.Heuristic))
-                openList[node.Cost+node.Heuristic] = new List<AStarNode>();
-            openList[node.Cost+node.Heuristic].Add(node);
+            float key = node.Cost + node.Heuristic;
+            if (!openList.ContainsKey(key))
+                openList[key] = new List<AStarNode>();
+            openList[key].Add(node);
         }
 
         private AStarNode GetBestNode()
@@ -83,18 +84,19 @@ namespace CPI311.GameEngine
             AStarNode node = openList.ElementAt(0).Value[0];
             openList.ElementAt(0).Value.Remove(node);
             if (openList.ElementAt(0).Value.Count == 0)
-                openList.Remove(node.Cost+node.Heuristic);
+                openList.Remove(node.Cost + node.Heuristic);
             node.Closed = true;
             return node;
         }
 
         private void RemoveFromOpenList(AStarNode node)
         {
-            if (openList.ContainsKey(node.Cost+node.Heuristic))
+            float key = node.Cost + node.Heuristic;
+            if (openList.ContainsKey(key))
             {
-                openList[node.Cost+node.Heuristic].Remove(node);
-                if (openList[node.Cost+node.Heuristic].Count == 0)
-                    openList.Remove(node.Cost+node.Heuristic);
+                openList[key].Remove(node);
+                if (openList[key].Count == 0)
+                    openList.Remove(key);
             }
         }
     }
