@@ -93,9 +93,9 @@ namespace CPI311.GameEngine
                 case 0: return PreviousMouseState.LeftButton == ButtonState.Released &&
                     CurrentMouseState.LeftButton == ButtonState.Pressed;
                 case 1: return PreviousMouseState.RightButton == ButtonState.Released &&
-                CurrentMouseState.RightButton == ButtonState.Pressed;
+                    CurrentMouseState.RightButton == ButtonState.Pressed;
                 case 2: return PreviousMouseState.MiddleButton == ButtonState.Released &&
-                CurrentMouseState.MiddleButton == ButtonState.Pressed;
+                    CurrentMouseState.MiddleButton == ButtonState.Pressed;
                 default:
                     return false;
             }

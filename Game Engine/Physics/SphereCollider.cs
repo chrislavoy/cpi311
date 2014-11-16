@@ -8,7 +8,7 @@ namespace CPI311.GameEngine
 
         public override bool Collides(Collider other, out Vector3 normal)
         {
-            if(other is SphereCollider)
+            if (other is SphereCollider)
             {
                 SphereCollider collider = other as SphereCollider;
                 if ((Transform.Position - collider.Transform.Position).LengthSquared() <
@@ -19,6 +19,8 @@ namespace CPI311.GameEngine
                     return true;
                 }
             }
+            else if (other is BoxCollider)
+                return other.Collides(this, out normal);
             return base.Collides(other, out normal);
         }
 

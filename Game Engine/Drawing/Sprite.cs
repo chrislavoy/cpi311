@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CPI311.GameEngine
 {
-    public class Sprite
+    public class Sprite : IUpdateable, IDrawable
     {
         public Texture2D Texture { get; set; }
         public Vector2 Position { get; set; }
@@ -21,11 +21,11 @@ namespace CPI311.GameEngine
         {
             Texture = texture;
             Position = Vector2.Zero;
-            Source = new Rectangle(0, 0, Texture.Width, Texture.Height);
-            Color = Color.White;
-            Rotation = 0;
             Width = Texture.Width;
             Height = Texture.Height;
+            Source = new Rectangle(0, 0, Width, Height);
+            Color = Color.White;
+            Rotation = 0;
             Origin = new Vector2(Width / 2, Height / 2);
             Scale = Vector2.One;
             Effect = SpriteEffects.None;

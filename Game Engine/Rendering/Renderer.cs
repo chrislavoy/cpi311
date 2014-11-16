@@ -2,7 +2,7 @@
 
 namespace CPI311.GameEngine
 {
-    public class Renderer : Component
+    public class Renderer : Component, IRenderable
     {
         public Material Material { get; set; }
         public virtual void Draw()
