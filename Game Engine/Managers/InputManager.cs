@@ -100,6 +100,21 @@ namespace CPI311.GameEngine
                     return false;
             }
         }
+
+        public static bool IsMouseReleased(int mouseButton)
+        {
+            switch (mouseButton)
+            {
+                case 0: return PreviousMouseState.LeftButton == ButtonState.Pressed &&
+                    CurrentMouseState.LeftButton == ButtonState.Released;
+                case 1: return PreviousMouseState.RightButton == ButtonState.Pressed &&
+                    CurrentMouseState.RightButton == ButtonState.Released;
+                case 2: return PreviousMouseState.MiddleButton == ButtonState.Pressed &&
+                    CurrentMouseState.MiddleButton == ButtonState.Released;
+                default:
+                    return false;
+            }
+        }
         #endregion
 
     }

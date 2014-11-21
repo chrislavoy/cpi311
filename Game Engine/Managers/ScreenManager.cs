@@ -14,6 +14,7 @@ namespace CPI311.GameEngine
         public static void Initialize(GraphicsDeviceManager graphics)
         {
             ScreenManager.graphics = graphics;
+            IsFullScreen = false;
         }
 
         public static Viewport DefaultViewport
