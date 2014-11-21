@@ -1,11 +1,23 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace CPI311.GameEngine
 {
     public class ModelRenderer : Renderer
     {
-        public Model Model { get; set; }
-
+        private Matrix[] BoneTransforms { get; set; }
+        private Model model;
+        public Model Model
+        {
+            get { return model; }
+            set{
+              if((model = value) != null)
+              {
+                BoneTransforms = new Matrix[Model.Bones.Count];
+                model.CopyAbsoluteBoneTransformsTo(BoneTransforms;
+              }
+        }
+        }
         public ModelRenderer(Model model)
         {
             Model = model;
@@ -19,8 +31,9 @@ namespace CPI311.GameEngine
                 Model.Draw(Transform.World, Camera.Current.View, Camera.Current.Projection);
             else
             {
-                Material.Apply(Transform.World);
                 foreach (ModelMesh mesh in Model.Meshes)
+                {
+                    Material.Apply(BoneTransforms[mesh.ParentBone.Index] * Transform.World);  
                     foreach (ModelMeshPart part in mesh.MeshParts)
                     {
                         ScreenManager.GraphicsDevice.SetVertexBuffer(part.VertexBuffer);
@@ -29,6 +42,7 @@ namespace CPI311.GameEngine
                             PrimitiveType.TriangleList, part.VertexOffset, 0,
                             part.NumVertices, part.StartIndex, part.PrimitiveCount);
                     }
+                }
             }
         }
     }

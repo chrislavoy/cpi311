@@ -90,17 +90,51 @@ namespace CPI311.GameEngine
         public Vector3 Position
         {
             get { return world.Translation; }
-            set {
+            set
+            {
                 if (Parent == null)
                     LocalPosition = value;
                 else
                 {
                     Matrix total = World;
                     total.Translation = value;
-                    LocalPosition = (Matrix.CreateScale(1 / LocalScale.X, 1 / LocalScale.Y, 1 / LocalScale.Z)
-                    * Matrix.CreateFromQuaternion(Quaternion.Inverse(LocalRotation)) *
+                    LocalPosition = (Matrix.Invert(Matrix.CreateScale(LocalScale) * Matrix.CreateFromQuaternion(LocalRotation)) *
                     total * Matrix.Invert(Parent.World)).Translation;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Global rotation of this transformation
+        /// </summary>
+        public Quaternion Rotation
+        {
+            get { return Quaternion.CreateFromRotationMatrix(World); }
+            set
+            {
+                if (Parent == null)
+                    LocalRotation = value;
+                else
+                {
+                    Vector3 scale, pos; Quaternion rot;
+                    world.Decompose(out scale, out rot, out pos);
+                    Matrix total = Matrix.CreateScale(scale) * Matrix.CreateFromQuaternion(value) * Matrix.CreateTranslation(pos);
+                    LocalRotation = Quaternion.CreateFromRotationMatrix(Matrix.Invert(Matrix.CreateScale(LocalScale)) * total *
+                        Matrix.Invert(Matrix.CreateTranslation(LocalPosition)*Parent.world));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Global scale of this transformation
+        /// </summary>
+        public Vector3 Scale
+        {
+            get
+            {
+                Vector3 s, t; Quaternion r;
+                world.Decompose(out s, out r, out t);
+                return s;
             }
         }
 

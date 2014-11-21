@@ -23,7 +23,6 @@ namespace CPI311.Labs
 
         Camera camera;
 
-        Model ground;
         Model cube;
         Model sphere;
 
@@ -101,7 +100,7 @@ namespace CPI311.Labs
             Matrix projection = camera.Projection;
 
             (cube.Meshes[0].Effects[0] as BasicEffect).DiffuseColor = Color.DarkBlue.ToVector3();
-            cube.Draw(Matrix.CreateScale(100, 0.1f, 100) * Matrix.CreateTranslation(50, -5, 50), view, projection);
+            cube.Draw(Matrix.CreateScale(55, 0.1f, 55) * Matrix.CreateTranslation(50, -5, 50), view, projection);
             (cube.Meshes[0].Effects[0] as BasicEffect).DiffuseColor = Color.DarkRed.ToVector3();
             foreach (AStarNode node in search.Nodes)
                 if (!node.Passable)

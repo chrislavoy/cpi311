@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CPI311.GameEngine
 {
@@ -12,9 +11,13 @@ namespace CPI311.GameEngine
         public Camera Camera { get { return Get<Camera>(); } }
         public Rigidbody Rigidbody { get { return Get<Rigidbody>(); } }
         public Renderer Renderer { get { return Get<Renderer>(); } }
+        public Collider Collider { get { return Get<Collider>(); } }
         public Light Light { get { return Get<Light>(); } }
         // All Components
         private Dictionary<Type,Component> Components {get; set;}
+        private List<IUpdateable> Updateables { get; set; }
+        private List<IRenderable> Renderables { get; set; }
+        private List<IDrawable> Drawables { get; set; }
 
         public GameObject()
         {
@@ -28,6 +31,12 @@ namespace CPI311.GameEngine
             component.GameObject = this;
             component.Transform = Transform;
             Components.Add(typeof(T), component);
+            if (component is IUpdateable)
+                Updateables.Add(component as IUpdateable);
+            if (component is IRenderable)
+                Renderables.Add(component as IRenderable);
+            if (component is IDrawable)
+                Drawables.Add(component as IDrawable);
             return component;
         }
 
@@ -42,7 +51,34 @@ namespace CPI311.GameEngine
         public void Remove<T>() where T:Component
         {
             if (Components.ContainsKey(typeof(T)))
+            {
+                Component component = Components[typeof(T)];
                 Components.Remove(typeof(T));
+                if (component is IUpdateable)
+                    Updateables.Remove(component as IUpdateable);
+                if (component is IRenderable)
+                    Renderables.Remove(component as IRenderable);
+                if (component is IDrawable)
+                    Drawables.Remove(component as IDrawable);
+            }
+        }
+
+        public void Update()
+        {
+            foreach (IUpdateable component in Updateables)
+                component.Update();
+        }
+
+        public void Draw()
+        {
+            foreach (IRenderable component in Renderables)
+                component.Draw();
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            foreach (IDrawable component in Drawables)
+                component.Draw(spriteBatch);
         }
     }
 }
