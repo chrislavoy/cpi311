@@ -14,7 +14,7 @@ namespace CPI311.GameEngine
               if((model = value) != null)
               {
                 BoneTransforms = new Matrix[Model.Bones.Count];
-                model.CopyAbsoluteBoneTransformsTo(BoneTransforms;
+                model.CopyAbsoluteBoneTransformsTo(BoneTransforms);
               }
         }
         }
@@ -22,6 +22,8 @@ namespace CPI311.GameEngine
         {
             Model = model;
         }
+
+        public ModelRenderer() { }
 
         public override void Draw()
         {

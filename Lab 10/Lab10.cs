@@ -48,10 +48,10 @@ namespace CPI311.Labs
             terrain.Transform = new Transform();
             terrain.Transform.LocalScale *= new Vector3(1, 5, 1);
             effect = Content.Load<Effect>("Effects/TerrainShader");
-            effect.Parameters["AmbientColor"].SetValue(new Vector3(0.1f,0.1f,0.1f));
-            effect.Parameters["DiffuseColor"].SetValue(new Vector3(0.3f, 0.1f, 0.1f));
-            effect.Parameters["SpecularColor"].SetValue(new Vector3(0, 0, 0.2f));
-            effect.Parameters["Shininess"].SetValue(20f);
+            //effect.Parameters["AmbientColor"].SetValue(new Vector3(0.1f,0.1f,0.1f));
+            //effect.Parameters["DiffuseColor"].SetValue(new Vector3(0.3f, 0.1f, 0.1f));
+            //effect.Parameters["SpecularColor"].SetValue(new Vector3(0, 0, 0.2f));
+            //effect.Parameters["Shininess"].SetValue(20f);
 
             camera = new Camera();
             camera.Transform = new Transform();
@@ -96,8 +96,8 @@ namespace CPI311.Labs
             effect.Parameters["World"].SetValue(terrain.Transform.World);
             effect.Parameters["View"].SetValue(camera.View);
             effect.Parameters["Projection"].SetValue(camera.Projection);
-            effect.Parameters["LightPosition"].SetValue(camera.Transform.Position + Vector3.Up * 10);
-            effect.Parameters["CameraPosition"].SetValue(camera.Transform.Position);            
+            //effect.Parameters["LightPosition"].SetValue(camera.Transform.Position + Vector3.Up * 10);
+            //effect.Parameters["CameraPosition"].SetValue(camera.Transform.Position);            
             foreach(EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();

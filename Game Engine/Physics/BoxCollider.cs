@@ -36,6 +36,11 @@ namespace CPI311.GameEngine
             3,2,6,  3,6,7, // Back
         };
 
+        public BoxCollider()
+        {
+            Size = 1;
+        }
+
         public override bool Collides(Collider other, out Vector3 normal)
         {
             if (other is SphereCollider)
@@ -88,8 +93,12 @@ namespace CPI311.GameEngine
             Matrix worldInverted = Matrix.Invert(Transform.World);
             ray.Position = Vector3.Transform(ray.Position, worldInverted);
             ray.Direction = Vector3.TransformNormal(ray.Direction, worldInverted);
-            BoundingBox box = new BoundingBox(Vector3.One * -Size, Vector3.One * Size);
-            return box.Intersects(ray);
+            float length = ray.Direction.Length();
+            ray.Direction /= length;
+            BoundingBox box = new BoundingBox(-Vector3.One * Size, Vector3.One * Size);
+            float? result = box.Intersects(ray);
+            if (result == null) return null;
+            else return result / length;
         }
     }
 }
