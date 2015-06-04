@@ -1,0 +1,5 @@
+C:\Users\chris_000\Documents\GitHub\cpi311-fall2014-read-only\Build\SDL.dll
+C:\Users\chris_000\Documents\GitHub\cpi311-fall2014-read-only\Build\Lab 02.exe
+C:\Users\chris_000\Documents\GitHub\cpi311-fall2014-read-only\Build\Lab 02.pdb
+C:\Users\chris_000\Documents\GitHub\cpi311-fall2014-read-only\Lab 02\obj\x86\Debug\Lab 02.exe
+C:\Users\chris_000\Documents\GitHub\cpi311-fall2014-read-only\Lab 02\obj\x86\Debug\Lab 02.pdb

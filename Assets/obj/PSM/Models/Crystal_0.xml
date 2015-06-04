@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XnaContent xmlns:Graphics="Microsoft.Xna.Framework.Content.Pipeline.Graphics" xmlns:Framework="Microsoft.Xna.Framework">
+  <Asset Type="Graphics:MeshContent">
+    <Name>Crystal</Name>
+    <Identity>
+      <SourceFilename>C:\Users\chris_000\Documents\GitHub\cpi311-fall2014-read-only\Content\Models\Crystal.fbx</SourceFilename>
+      <SourceTool>FbxImporter</SourceTool>
+    </Identity>
+    <OpaqueData>
+      <Data Key="MaxHandle" Type="int">17</Data>
+    </OpaqueData>
+    <Transform>2.54 0 0 0 0 7.19523466E-16 -2.54 0 0 2.54 7.19523466E-16 0 0 0 0 1</Transform>
+    <Positions>0 0 0.5 -0.25 -0.25 -1.88744753E-08 0.25 -0.25 -1.88744753E-08 0.25 0.25 1.88744753E-08 -0.25 0.25 1.88744753E-08 0 7.54979E-08 -0.5</Positions>
+    <Geometry>
+      <Batch>
+        <Indices>2 1 0 5 4 3 8 7 6 11 10 9 14 13 12 17 16 15 20 19 18 23 22 21</Indices>
+        <Vertices>
+          <PositionIndices>0 1 2 0 2 3 0 3 4 0 4 1 5 4 3 5 3 2 5 2 1 5 1 4</PositionIndices>
+          <Channels>
+            <VertexChannel Name="Normal0" ElementType="Framework:Vector3">0 -0.8944272 0.4472136 0 -0.89442724 0.44721362 0 -0.89442724 0.44721362 0.8944272 -3.3763687E-08 0.44721362 0.89442724 -3.376369E-08 0.44721365 0.89442724 -3.376369E-08 0.44721365 0 0.8944272 0.44721362 0 0.89442724 0.44721365 0 0.89442724 0.44721365 -0.8944272 -3.3763687E-08 0.4472136 -0.89442724 -3.3763687E-08 0.44721362 -0.89442724 -3.3763687E-08 0.44721362 0 0.89442724 -0.447213441 0 0.89442724 -0.447213471 0 0.89442724 -0.447213471 0.8944272 3.3763687E-08 -0.44721362 0.89442724 3.376369E-08 -0.44721365 0.8944272 3.376369E-08 -0.44721365 0 -0.8944271 -0.447213739 0 -0.8944271 -0.4472137 0 -0.8944271 -0.4472137 -0.8944272 3.3763687E-08 -0.4472136 -0.8944272 3.3763687E-08 -0.4472136 -0.89442724 3.3763687E-08 -0.44721362</VertexChannel>
+            <VertexChannel Name="TextureCoordinate0" ElementType="Framework:Vector2">0.5 0 0 1 1 1 0.5 0 0 1 1 1 0.5 0 0 1 1 1 0.5 0 0 1 1 1 0.5 0 0 1 1 1 0.5 0 0 1 1 1 0.5 0 0 1 1 1 0.5 0 0 1 1 1</VertexChannel>
+          </Channels>
+        </Vertices>
+      </Batch>
+    </Geometry>
+  </Asset>
+</XnaContent>

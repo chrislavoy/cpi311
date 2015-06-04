@@ -1,0 +1,4 @@
+C:\Users\chris_000\Documents\GitHub\cpi311-fall2014-read-only\Build\Game Engine.dll
+C:\Users\chris_000\Documents\GitHub\cpi311-fall2014-read-only\Build\Game Engine.pdb
+C:\Users\chris_000\Documents\GitHub\cpi311-fall2014-read-only\Game Engine\obj\x86\Debug\Game Engine.dll
+C:\Users\chris_000\Documents\GitHub\cpi311-fall2014-read-only\Game Engine\obj\x86\Debug\Game Engine.pdb
